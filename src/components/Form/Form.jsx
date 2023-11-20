@@ -1,7 +1,26 @@
-import { FormStyle } from './Form.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { nanoid } from 'nanoid';
 import { useState } from 'react';
+import { addContact } from 'redux/contacts.reducer';
+import { FormStyle } from './Form.styled';
 
-export const Form = ({ createContact }) => {
+export const Form = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contactsStore.contacts);
+
+  const createContact = formData => {
+    if (contacts.some(contact => contact.name === formData.name)) {
+      alert(`${formData.name} is already in contacts`);
+      return;
+    }
+    const newContact = {
+      ...formData,
+      id: nanoid(),
+    };
+    console.log(newContact);
+    dispatch(addContact(newContact));
+  };
+
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
